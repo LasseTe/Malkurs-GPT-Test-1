@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Malkurs – Kreativ & Kalender</title>
+    <meta name="description" content="Kreative Malkurse mit Tages‑Weisheit, Kalender und Terminbuchung – alles auf einer Seite." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #0f1220;
+        --bg-soft: #151934;
+        --text: #e9eefc;
+        --muted: #b9c1e3;
+        --accent: #7aa2ff;
+        --accent-2: #b77cff;
+        --ok: #2ecc71;
+        --warn: #ffce54;
+        --error: #ff6b6b;
+        --card: rgba(255,255,255,0.06);
+        --shadow: 0 10px 30px rgba(0,0,0,0.35);
+        --radius: 18px;
+      }
+      @media (prefers-color-scheme: light) {
+        :root { --bg: #f7f8ff; --bg-soft:#eef1ff; --text:#141824; --muted:#4a5375; --card: rgba(0,0,0,0.04); --shadow: 0 12px 28px rgba(5,15,45,.08);}  
+      }
+      /* Basic Reset */
+      *, *::before, *::after { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(122,162,255,.15), transparent 60%),
+        radial-gradient(1400px 800px at 110% -20%, rgba(183,124,255,.15), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg));
+        color: var(--text); line-height: 1.6; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      /* Header / Nav */
+      header { position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(1.2) blur(8px); background: linear-gradient(180deg, rgba(10,12,24,.9), rgba(10,12,24,.6)); border-bottom: 1px solid rgba(255,255,255,.06); }
+      .nav { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; padding: 14px 20px; }
+      .brand { display:flex; align-items:center; gap:12px; font-weight: 800; letter-spacing: .5px; }
+      .brand .logo { width: 36px; height: 36px; border-radius: 11px; background: conic-gradient(from 200deg, var(--accent), var(--accent-2)); box-shadow: inset 0 0 24px rgba(255,255,255,.35), var(--shadow); }
+      .brand span { font-family: "Playfair Display", serif; font-size: 22px; }
+      nav a { margin: 0 10px; padding: 8px 12px; border-radius: 10px; color: var(--text); }
+      nav a:hover { background: var(--card); text-decoration: none; }
+      .nav-cta { margin-left: 8px; border: 1px solid rgba(255,255,255,.12); padding: 8px 14px; border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); box-shadow: var(--shadow); }
+
+      /* Hero */
+      .hero { max-width: 1100px; margin: 28px auto 0; padding: 36px 20px 24px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: center; }
+      .hero h1 { font-family: "Playfair Display", serif; font-weight: 800; font-size: clamp(34px, 5vw, 58px); line-height: 1.05; margin: 0 0 12px; }
+      .hero p.lead { margin: 0 0 16px; font-size: clamp(16px, 2.4vw, 19px); color: var(--muted); }
+      .hero .card { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+      .tagbar { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+      .tag { font-size: 12px; padding: 6px 10px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03)); }
+
+      /* Quote of the day */
+      .quote { position: relative; background: linear-gradient(160deg, rgba(122,162,255,.14), rgba(183,124,255,.14)); border: 1px solid rgba(255,255,255,.12); border-radius: var(--radius); padding: 18px 18px 18px 18px; box-shadow: var(--shadow); }
+      .quote blockquote { margin: 0; font-size: clamp(16px, 2.6vw, 22px); font-weight: 600; }
+      .quote cite { display:block; margin-top: 8px; font-style: normal; color: var(--muted); }
+      .quote small { display:block; margin-top: 10px; color: var(--muted); }
+
+      /* Sections */
+      section { max-width: 1100px; margin: 32px auto; padding: 0 20px; }
+      .section-title { font-family: "Playfair Display", serif; font-size: clamp(26px, 3.4vw, 36px); margin: 24px 0 12px; }
+      .grid { display: grid; gap: 18px; }
+      .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+      .card { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+
+      /* Calendar */
+      .cal-wrap { display:grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: start; }
+      .cal { background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+      .cal-header { display:flex; align-items:center; justify-content:space-between; padding: 14px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+      .cal-header h3 { margin: 0; font-size: 18px; }
+      .cal-nav { display:flex; gap: 8px; }
+      .cal-nav button { border: 1px solid rgba(255,255,255,.14); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); color: var(--text); padding: 6px 10px; border-radius: 10px; cursor:pointer; }
+      .cal-grid { display:grid; grid-template-columns: repeat(7, 1fr); gap: 8px; padding: 12px; }
+      .cal-weekday { text-align:center; font-size: 12px; color: var(--muted); }
+      .cal-day { border: 1px solid rgba(255,255,255,.08); min-height: 74px; border-radius: 12px; padding: 8px; position: relative; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); outline: none; cursor: pointer; }
+      .cal-day.is-other-month { opacity: .45; }
+      .cal-day .num { font-weight: 600; font-size: 14px; }
+      .cal-day.today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+      .cal-day .dot { position:absolute; width: 8px; height: 8px; border-radius: 50%; right: 8px; bottom: 6px; background: var(--accent-2); box-shadow: 0 0 0 2px rgba(0,0,0,.15); }
+      .details { position: sticky; top: 84px; background: var(--card); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+      .details h4 { margin: 0 0 6px; }
+      .event { display:flex; align-items:center; justify-content:space-between; gap: 8px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 10px; margin: 8px 0; }
+      .event .time { color: var(--muted); font-size: 14px; }
+      .event .ics { border: none; cursor: pointer; padding: 6px 10px; border-radius: 10px; color: var(--text); background: linear-gradient(180deg, rgba(122,162,255,.25), rgba(122,162,255,.1)); }
+
+      /* Booking form */
+      form label { display:block; font-weight: 600; margin: 8px 0 6px; }
+      input, textarea, select { width: 100%; padding: 12px 12px; border-radius: 12px; color: var(--text); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+      textarea { min-height: 110px; resize: vertical; }
+      .actions { display:flex; gap: 10px; align-items:center; flex-wrap:wrap; }
+      .btn { display:inline-flex; align-items:center; justify-content:center; gap: 10px; border: 1px solid rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03)); color: var(--text); padding: 10px 14px; border-radius: 12px; cursor: pointer; box-shadow: var(--shadow); }
+      .btn.primary { background: linear-gradient(180deg, rgba(122,162,255,.45), rgba(122,162,255,.12)); border-color: rgba(122,162,255,.55); }
+      .small { font-size: 12px; color: var(--muted); }
+
+      /* Footer */
+      footer { max-width: 1100px; margin: 40px auto 80px; padding: 0 20px; color: var(--muted); }
+
+      /* Utilities */
+      .muted { color: var(--muted); }
+      .hidden { display:none; }
+      .center { text-align:center; }
+
+      /* Motion */
+      @media (prefers-reduced-motion: no-preference) {
+        .fade-in { opacity: 0; transform: translateY(8px); animation: fadeIn .7s ease forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: none; } }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav" role="navigation" aria-label="Hauptnavigation">
+        <div class="brand"><div class="logo" aria-hidden="true"></div><span>Malkurs Atelier</span></div>
+        <nav>
+          <a href="#weisheit">Weisheit</a>
+          <a href="#kurs">Kursinformationen</a>
+          <a href="#termine">Kalender</a>
+          <a class="nav-cta" href="#buchung">Termin buchen</a>
+          <a href="#impressum">Impressum</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="hero fade-in" id="top">
+        <div>
+          <h1>Mal dich frei.<br/>Kreative Kurse mit Herz & Hand.</h1>
+          <p class="lead">Entdecke Farben, Formen und deinen eigenen Ausdruck – in kleinen Gruppen, freundlich geführt, mit Raum für Experimente.</p>
+          <div class="tagbar" aria-hidden="true">
+            <span class="tag">Acryl & Aquarell</span>
+            <span class="tag">Skizze & Komposition</span>
+            <span class="tag">Anfänger willkommen</span>
+            <span class="tag">Material vor Ort</span>
+          </div>
+        </div>
+        <div class="card" id="weisheit" aria-live="polite">
+          <div class="quote">
+            <blockquote id="quote-text">„Kunst wäscht den Staub des Alltags von der Seele.“</blockquote>
+            <cite id="quote-author">— Pablo Picasso</cite>
+            <small>Wechselt täglich um 00:00 Uhr.</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kursinformationen -->
+      <section id="kurs">
+        <h2 class="section-title">Kursinformationen</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>Was dich erwartet</h3>
+            <p>Gemeinsam erkunden wir Farbe, Licht, Proportion und Material. Du lernst Techniken, doch wichtiger: deinen Blick zu schärfen und Entscheidungen zu treffen.</p>
+          </div>
+          <div class="card">
+            <h3>Für wen ist der Kurs?</h3>
+            <p>Für Einsteigerinnen und Fortgeschrittene. Du brauchst keine Vorkenntnisse – nur Neugier und Lust auf Gestalten.</p>
+          </div>
+          <div class="card">
+            <h3>Rahmen</h3>
+            <p>Kleine Gruppe (max. 8 Personen), Dauer pro Einheit: 2 Stunden. Materialien sind vorhanden, eigene Projekte willkommen.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Kalender -->
+      <section id="termine">
+        <h2 class="section-title">Kalender & Termine</h2>
+        <div class="cal-wrap">
+          <div class="cal" aria-label="Kalender" role="group">
+            <div class="cal-header">
+              <div>
+                <h3 id="cal-title">Monat Jahr</h3>
+                <div class="small muted">Klicke auf ein Datum für Details & .ics</div>
+              </div>
+              <div class="cal-nav" role="toolbar" aria-label="Monatsnavigation">
+                <button id="prev-month" aria-label="Vorheriger Monat">◀</button>
+                <button id="today-btn" aria-label="Heute">Heute</button>
+                <button id="next-month" aria-label="Nächster Monat">▶</button>
+              </div>
+            </div>
+            <div class="cal-grid" id="cal-grid">
+              <!-- Wochentage -->
+            </div>
+          </div>
+
+          <aside class="details" id="day-details" aria-live="polite">
+            <h4 id="details-title">Wähle ein Datum</h4>
+            <div id="details-list" class="muted">Hier erscheinen Termine und eine Option, als .ics zu speichern.</div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Buchung -->
+      <section id="buchung">
+        <h2 class="section-title">Terminbuchung</h2>
+        <div class="grid grid-2">
+          <div class="card">
+            <p>Du möchtest einen Platz sichern? Schreibe uns mit deinem Wunschtermin. Wir melden uns schnell zurück.</p>
+            <form id="booking-form" autocomplete="on">
+              <label for="name">Name</label>
+              <input id="name" name="name" required placeholder="Vor- und Nachname" />
+
+              <label for="email">E‑Mail</label>
+              <input id="email" name="email" type="email" required placeholder="dein@beispiel.de" />
+
+              <label for="date">Wunschtermin</label>
+              <input id="date" name="date" type="date" />
+
+              <label for="message">Nachricht (optional)</label>
+              <textarea id="message" name="message" placeholder="Interessen, Vorkenntnisse, Fragen…"></textarea>
+
+              <div class="actions">
+                <button class="btn primary" type="submit">Anfrage senden</button>
+                <span class="small" id="form-hint">Die Anfrage öffnet deinen E‑Mail‑Client (kein Konto nötig).</span>
+              </div>
+              <div class="small muted" id="form-feedback" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Kontakt</h3>
+            <p><strong>Malkurs Atelier</strong><br> Musterstraße 12<br> 12345 Musterstadt</p>
+            <p>Telefon: 0123 456789<br> E‑Mail: <a href="mailto:atelier@example.com">atelier@example.com</a></p>
+            <p class="muted small">Tipp: Du kannst im Kalender einen Termin anklicken und direkt eine .ics‑Datei für deinen Kalender herunterladen.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Impressum -->
+      <section id="impressum">
+        <h2 class="section-title">Impressum</h2>
+        <div class="card">
+          <p><strong>Verantwortlich nach § 5 TMG</strong><br>
+          Malkurs Atelier – Max Mustermann<br>
+          Musterstraße 12, 12345 Musterstadt<br>
+          E‑Mail: atelier@example.com · Telefon: 0123 456789</p>
+          <p class="small muted">Ersetze die Platzhalter durch deine echten Angaben. Optional: Datenschutzerklärung & AGB ergänzen.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="center">
+      <p>© <span id="year"></span> Malkurs Atelier · <a href="#impressum">Impressum</a></p>
+    </footer>
+
+    <script>
+      // ======= KONFIGURATION =======
+      // 1) E-Mail für Buchungen (mailto)
+      const BOOKING_EMAIL = 'atelier@example.com';
+      const BOOKING_SUBJECT_PREFIX = 'Malkurs Anfrage';
+
+      // 2) Standardzeiten für .ics (lokale Kursdauer)
+      const DEFAULT_START_TIME = '18:00'; // 18 Uhr
+      const DEFAULT_END_TIME   = '20:00'; // 20 Uhr
+
+      // 3) Einzeltermine / Events (Beispiele) –> anpassen oder per CMS/API ersetzen
+      // Format: { date: 'YYYY-MM-DD', title: 'Malkurs: Thema', start: 'HH:MM', end: 'HH:MM' }
+      const EVENTS = [
+        // Beispieltermine – bitte ersetzen/erweitern
+        { date: '2025-09-15', title: 'Malkurs: Farbe & Gefühl', start: '18:00', end: '20:00' },
+        { date: '2025-09-22', title: 'Malkurs: Licht & Schatten', start: '18:00', end: '20:00' },
+        { date: '2025-10-01', title: 'Malkurs: Komposition', start: '18:00', end: '20:00' },
+      ];
+
+      // ======= WEISHEIT DES TAGES =======
+      const QUOTES = [
+        { t: 'Kunst wäscht den Staub des Alltags von der Seele.', a: 'Pablo Picasso' },
+        { t: 'Jedes Kind ist ein Künstler. Das Problem ist, ein Künstler zu bleiben, wenn man erwachsen wird.', a: 'Pablo Picasso' },
+        { t: 'Die Inspiration existiert, aber sie muss dich bei der Arbeit finden.', a: 'Pablo Picasso' },
+        { t: 'Eine Linie ist ein Punkt, der spazieren geht.', a: 'Paul Klee' },
+        { t: 'Die Farbe hat mich.', a: 'Paul Klee' },
+        { t: 'Weniger, aber besser.', a: 'Dieter Rams' },
+        { t: 'Die Details sind nicht die Details. Sie machen das Design.', a: 'Charles Eames' },
+        { t: 'Farben sind Taten des Lichts.', a: 'Johann W. von Goethe' },
+        { t: 'Kreativität ist Intelligenz, die Spaß hat.', a: 'Albert Einstein (zugeschrieben)' },
+        { t: 'Kunst ist nicht, was du siehst, sondern was du andere sehen lässt.', a: 'Edgar Degas' },
+        { t: 'Ich suche nicht, ich finde.', a: 'Pablo Picasso' },
+        { t: 'Ein Bild ist ein Gedicht ohne Worte.', a: 'Horaz' },
+        { t: 'Fehler sind die Portale der Entdeckung.', a: 'James Joyce' },
+        { t: 'Die Kunst ist eine Tochter der Freiheit.', a: 'Friedrich Schiller' },
+        { t: 'Das Auge macht das Bild, nicht die Kamera.', a: 'Gisèle Freund' },
+        { t: 'Gestaltung ist Haltung.', a: 'Otl Aicher' },
+        { t: 'Beschränkung befreit.', a: '—' },
+        { t: 'Der Zufall ist dein Freund.', a: '—' },
+        { t: 'Lass das Weiß atmen.', a: '—' },
+        { t: 'Jeder Pinselstrich erzählt.', a: '—' },
+        { t: 'Ordnung und Freiheit sind Geschwister.', a: '—' },
+        { t: 'Kunst beginnt, wo Worte enden.', a: '—' },
+        { t: 'Wer sehen lernt, malt anders.', a: '—' },
+        { t: 'Der Raum zwischen den Dingen ist genauso wichtig wie die Dinge.', a: '—' },
+        { t: 'Nichts ist im Verstand, was nicht zuvor in den Sinnen war.', a: 'Aristoteles' },
+        { t: 'Jeder Tag ist ein neuer Anfang.', a: '—' },
+        { t: 'Kunst ist der mutige Fehler.', a: '—' },
+        { t: 'Struktur ist Rhythmus.', a: '—' },
+        { t: 'Die Linie denkt.', a: '—' },
+        { t: 'Kunst ist Freiheit.', a: '—' }
+      ];
+
+      function setDailyQuote() {
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const dayOfYear = Math.floor((now - startOfYear) / 86400000);
+        const q = QUOTES[ dayOfYear % QUOTES.length ];
+        document.getElementById('quote-text').textContent = '„' + q.t + '“';
+        document.getElementById('quote-author').textContent = '— ' + q.a;
+      }
+
+      function msUntilMidnight() {
+        const now = new Date();
+        const midnight = new Date(now);
+        midnight.setHours(24,0,0,0); // nächste Mitternacht
+        return midnight - now;
+      }
+
+      // ======= KALENDER =======
+      const WEEKDAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+      const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+      let current = new Date();
+
+      function ymd(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth()+1).padStart(2,'0');
+        const d = String(date.getDate()).padStart(2,'0');
+        return `${y}-${m}-${d}`;
+      }
+
+      function parseYMD(str) {
+        const [y,m,d] = str.split('-').map(Number);
+        return new Date(y, m-1, d);
+      }
+
+      function eventsOn(date) {
+        const key = (typeof date === 'string') ? date : ymd(date);
+        return EVENTS.filter(e => e.date === key);
+      }
+
+      function renderCalendar(date = new Date()) {
+        const grid = document.getElementById('cal-grid');
+        grid.innerHTML = '';
+        // Wochentage
+        WEEKDAYS.forEach(d => {
+          const el = document.createElement('div');
+          el.className = 'cal-weekday';
+          el.textContent = d;
+          grid.appendChild(el);
+        });
+
+        const y = date.getFullYear();
+        const m = date.getMonth();
+        document.getElementById('cal-title').textContent = `${MONTHS[m]} ${y}`;
+
+        // Ersten Tag (Montag=0) bestimmen
+        const firstOfMonth = new Date(y, m, 1);
+        let start = firstOfMonth.getDay(); // So=0..Sa=6
+        start = (start === 0) ? 6 : start - 1; // auf Mo..So mappen
+        const daysInMonth = new Date(y, m+1, 0).getDate();
+
+        // Tage des vorherigen Monats, um die Woche zu füllen
+        const prevDays = start;
+        const prevMonthDays = new Date(y, m, 0).getDate();
+
+        const totalCells = Math.ceil((start + daysInMonth) / 7) * 7;
+        const todayStr = ymd(new Date());
+
+        for (let i = 0; i < totalCells; i++) {
+          const cell = document.createElement('button');
+          cell.className = 'cal-day';
+          cell.type = 'button';
+
+          let dayNum, cellDate, isOther = false;
+          if (i < prevDays) {
+            dayNum = prevMonthDays - prevDays + i + 1;
+            cellDate = new Date(y, m-1, dayNum);
+            isOther = true;
+          } else if (i >= prevDays + daysInMonth) {
+            dayNum = i - (prevDays + daysInMonth) + 1;
+            cellDate = new Date(y, m+1, dayNum);
+            isOther = true;
+          } else {
+            dayNum = i - prevDays + 1;
+            cellDate = new Date(y, m, dayNum);
+          }
+
+          const num = document.createElement('div');
+          num.className = 'num';
+          num.textContent = dayNum;
+          cell.appendChild(num);
+
+          const dateStr = ymd(cellDate);
+          cell.setAttribute('data-date', dateStr);
+          cell.setAttribute('aria-label', `Datum ${dateStr}`);
+          if (isOther) cell.classList.add('is-other-month');
+          if (dateStr === todayStr && !isOther) cell.classList.add('today');
+
+          const dayEvents = eventsOn(dateStr);
+          if (dayEvents.length) {
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            dot.title = `${dayEvents.length} Termin(e)`;
+            cell.appendChild(dot);
+          }
+
+          cell.addEventListener('click', () => showDayDetails(dateStr));
+          grid.appendChild(cell);
+        }
+      }
+
+      function showDayDetails(dateStr) {
+        const detailsTitle = document.getElementById('details-title');
+        const detailsList = document.getElementById('details-list');
+        const d = parseYMD(dateStr);
+        const human = `${d.getDate()}. ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+        detailsTitle.textContent = `Details für ${human}`;
+
+        const dayEvents = eventsOn(dateStr);
+        if (!dayEvents.length) {
+          detailsList.innerHTML = `<div class="muted">Kein Kurs an diesem Tag geplant.</div>`;
+          return;
+        }
+
+        detailsList.innerHTML = '';
+        dayEvents.forEach((ev, idx) => {
+          const row = document.createElement('div');
+          row.className = 'event';
+          row.innerHTML = `<div><strong>${ev.title}</strong><div class="time">${ev.start || DEFAULT_START_TIME} – ${ev.end || DEFAULT_END_TIME}</div></div>`;
+          const btn = document.createElement('button');
+          btn.className = 'ics';
+          btn.textContent = '.ics speichern';
+          btn.addEventListener('click', () => downloadICS(ev));
+          row.appendChild(btn);
+          detailsList.appendChild(row);
+        });
+      }
+
+      function toISOZ(dateStr, timeStr) {
+        const d = parseYMD(dateStr);
+        const [hh, mm] = (timeStr || '00:00').split(':').map(Number);
+        d.setHours(hh, mm, 0, 0);
+        return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z'); // YYYYMMDDTHHMMSSZ
+      }
+
+      function downloadICS(ev) {
+        const dtStart = toISOZ(ev.date, ev.start || DEFAULT_START_TIME);
+        const dtEnd   = toISOZ(ev.date, ev.end   || DEFAULT_END_TIME);
+        const uid = `${ev.date}-${(ev.title||'kurs').replace(/\W+/g,'-')}@malkurs`;
+        const ics = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//Malkurs Atelier//DE',
+          'CALSCALE:GREGORIAN',
+          'METHOD:PUBLISH',
+          'BEGIN:VEVENT',
+          `UID:${uid}`,
+          `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/, 'Z')}`,
+          `DTSTART:${dtStart}`,
+          `DTEND:${dtEnd}`,
+          `SUMMARY:${ev.title}`,
+          'LOCATION:Malkurs Atelier',
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ].join('\r\n');
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${ev.date}-${(ev.title||'kurs').replace(/\W+/g,'-')}.ics`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      // ======= BUCHUNGS‑FORMULAR (mailto) =======
+      document.getElementById('booking-form').addEventListener('submit', function(e){
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const date = document.getElementById('date').value;
+        const msg  = document.getElementById('message').value.trim();
+        if (!name || !email) {
+          document.getElementById('form-feedback').textContent = 'Bitte Name und E‑Mail angeben.';
+          return;
+        }
+        const subject = encodeURIComponent(`${BOOKING_SUBJECT_PREFIX}: ${name}`);
+        const lines = [
+          `Name: ${name}`,
+          `E‑Mail: ${email}`,
+          `Wunschtermin: ${date || '—'}`,
+          '',
+          msg || '(keine weiteren Angaben)'
+        ];
+        const body = encodeURIComponent(lines.join('\n'));
+        const mailto = `mailto:${BOOKING_EMAIL}?subject=${subject}&body=${body}`;
+        window.location.href = mailto;
+        document.getElementById('form-feedback').textContent = 'E‑Mail‑Fenster wurde geöffnet – vielen Dank!';
+      });
+
+      // ======= INIT =======
+      (function init(){
+        // Jahr im Footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        // Zitat setzen & Mitternachts‑Update planen
+        setDailyQuote();
+        setTimeout(() => { setDailyQuote(); setInterval(setDailyQuote, 86400000); }, msUntilMidnight());
+        // Kalender rendern
+        renderCalendar(current);
+        // Navigation
+        document.getElementById('prev-month').addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()-1, 1); renderCalendar(current); });
+        document.getElementById('next-month').addEventListener('click', () => { current = new Date(current.getFullYear(), current.getMonth()+1, 1); renderCalendar(current); });
+        document.getElementById('today-btn').addEventListener('click', () => { current = new Date(); renderCalendar(current); showDayDetails(ymd(new Date())); });
+        // Vortitel Details auf Heute
+        showDayDetails(ymd(new Date()));
+      })();
+    </script>
+  </body>
+</html>
