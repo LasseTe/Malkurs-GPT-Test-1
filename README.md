@@ -1,1 +1,0 @@
-# Malkurs-GPT-Test-1
